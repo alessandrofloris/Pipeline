@@ -14,25 +14,28 @@ def process_image(image_path):
     # 2. Extract bounding boxes
     boxes = bounding_box.extract_boxes(yolo_results)
 
-    # 3. Cluster bounding boxes
+    # 3. Padding bounding boxes 
+    boxes = bounding_box.padding_bounding_boxes(boxes, image_path)
+
+    # 4. Cluster bounding boxes
     clustered_boxes = clustering.cluster_boxes(boxes, distance_threshold=config.CLUSTER_THRESHOLD) 
     
-    # 3.1. Draw bounding boxes
+    # 4.1. Draw bounding boxes
     image = image_utils.draw_boxes(image_path, clustered_boxes)
     image_utils.save_image(image, config.OUTPUT_IMAGE_PATH)
 
-    # 4. Crop images
+    # 5. Crop images
     cropped_images = []
     for box in clustered_boxes:
         cropped_images.append(image_utils.crop_image(image_path, box))
 
-    # 5. Generate LLaVA descriptions    
+    # 6. Generate LLaVA descriptions    
     descriptions = llava.generate_descriptions(cropped_images)
 
-    # 6. Merge LLaVA outputs
+    # 7. Merge LLaVA outputs
     merged_description = "\n".join(descriptions) 
 
-    # 6. Get person information from Gemini API
+    # 8. Get person information from Gemini API
     person_info = gemini_api.get_person_info(merged_description) 
 
     utils.save_results_as_json(config.LLAVA_PROMPT, config.GEMINI_PROMPT, merged_description, person_info, config.OUTPUT_RESULTS_PATH)
