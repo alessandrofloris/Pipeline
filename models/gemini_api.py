@@ -10,7 +10,7 @@ def get_person_info(description):
     """
     
     genai.configure(api_key=config.GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
     prompt = config.GEMINI_PROMPT + description
 
