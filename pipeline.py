@@ -30,7 +30,7 @@ def process_image(image_path):
     descriptions = llava.generate_descriptions(cropped_images)
 
     # 6. Merge LLaVA outputs
-    merged_description = "\n".join(descriptions) 
+    merged_description = str(descriptions)
 
     # 7. Get person information from Gemini API
     person_info = gemini_api.get_person_info(merged_description) 

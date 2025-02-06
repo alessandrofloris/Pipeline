@@ -1,4 +1,4 @@
-IMAGE_NAME = "IMG_2984"
+IMAGE_NAME = "IMG_3048"
 IMAGE_EXTENSION = "jpeg"
 IMAGE_PATH = "images/" + IMAGE_NAME + "." + IMAGE_EXTENSION
 OUTPUT_IMAGE_PATH = f"results/{IMAGE_NAME}_bb.jpeg"
@@ -20,18 +20,16 @@ GEMINI_API_KEY = "AIzaSyDkgtvMSiqcS2Mu6fQA8vthqPdrKXZM0V0"
 
 LLAVA_PROMPT = """For each person in the image try to briefly describe their activity, their presumed age range and their presumed sex."""
 
-GEMINI_PROMPT = """From the following text extract the following informations: 
+GEMINI_PROMPT = """From the following list of texts extract the following informations: 
 
     - the number of persons
-    - for each person:
+    - for each person (be carefull only persons not animals or objects):
     - describe the activity they are doing using one of the following (cuddling, standing alone, standing togheter, reading, sleeping, eating/drinking, playing alone, playing togheter, conversation, walking alone, walking in group, playing with pet)
     - determine their sex (male, female)
     - determine their age range (child, adult, senior)
 
     When not enough details are avaible write "not enough informations"
 
-    The output format should be the following:
+    You should output a single tuple and the format should be the following:
     (number of individuals, [(individual id, activity, age, sex), ...])
     No other text should be produced!"""
-
-#The output should be a single list, and the format should be the following:
