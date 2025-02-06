@@ -1,4 +1,4 @@
-IMAGE_NAME = "IMG_3032"
+IMAGE_NAME = "IMG_2984"
 IMAGE_EXTENSION = "jpeg"
 IMAGE_PATH = "images/" + IMAGE_NAME + "." + IMAGE_EXTENSION
 OUTPUT_IMAGE_PATH = f"results/{IMAGE_NAME}_bb.jpeg"
@@ -18,18 +18,7 @@ PADDING_BB_Y = 0.3
 
 GEMINI_API_KEY = "AIzaSyDkgtvMSiqcS2Mu6fQA8vthqPdrKXZM0V0"
 
-LLAVA_PROMPT = """Analyze the given image and provide a description for each person present. For each person, output the following attributes:
-
-Activity: Choose from the following predefined categories:
-Cuddling, standing alone, standing together, reading, sleeping, eating/drinking, playing alone, playing together, conversation, walking alone, walking in a group, playing with a pet.
-
-Sex: Male or female. If uncertain, make the best guess based on visible features such as clothing, hairstyle, or posture.
-
-Age range: Choose from "child," "adult," or "senior." If uncertain, make an informed guess based on body proportions, posture, and apparent physical features.
-
-If a person is partially visible or obscured, use contextual clues to infer the missing details. Even when the certainty is low, provide the best possible guess rather than leaving attributes undefined.
-Ensure that all people in the image are included in the response.
-"""
+LLAVA_PROMPT = """For each person in the image try to briefly describe their activity, their presumed age range and their presumed sex."""
 
 GEMINI_PROMPT = """From the following text extract the following informations: 
 

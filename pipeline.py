@@ -1,4 +1,4 @@
-from models import yolo, llava, gemini_api
+from models import llava, gemini_api, fastrcnn
 from utils import bounding_box, image_utils, clustering
 from config import config
 from utils import utils
@@ -8,34 +8,31 @@ def process_image(image_path):
     Main pipeline function.
     """
 
-    # 1. Detect people with YOLO
-    yolo_results = yolo.detect_people(image_path) 
-    
-    # 2. Extract bounding boxes
-    boxes = bounding_box.extract_boxes(yolo_results)
+    # 1. Detect people and get their bounding boxes
+    boxes = fastrcnn.detect_people(image_path)
 
-    # 3. Padding bounding boxes 
+    # 2. Padding bounding boxes 
     boxes = bounding_box.padding_bounding_boxes(boxes, image_path)
 
-    # 4. Cluster bounding boxes
+    # 3. Cluster bounding boxes
     clustered_boxes = clustering.cluster_boxes(boxes, distance_threshold=config.CLUSTER_THRESHOLD) 
     
-    # 4.1. Draw bounding boxes
+    # 3.1 Draw bounding boxes
     image = image_utils.draw_boxes(image_path, clustered_boxes)
     image_utils.save_image(image, config.OUTPUT_IMAGE_PATH)
 
-    # 5. Crop images
+    # 4. Crop images
     cropped_images = []
     for box in clustered_boxes:
         cropped_images.append(image_utils.crop_image(image_path, box))
 
-    # 6. Generate LLaVA descriptions    
+    # 5. Generate LLaVA descriptions    
     descriptions = llava.generate_descriptions(cropped_images)
 
-    # 7. Merge LLaVA outputs
+    # 6. Merge LLaVA outputs
     merged_description = "\n".join(descriptions) 
 
-    # 8. Get person information from Gemini API
+    # 7. Get person information from Gemini API
     person_info = gemini_api.get_person_info(merged_description) 
 
     utils.save_results_as_json(config.LLAVA_PROMPT, config.GEMINI_PROMPT, merged_description, person_info, config.OUTPUT_RESULTS_PATH)
