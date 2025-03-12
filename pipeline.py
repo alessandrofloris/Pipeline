@@ -2,8 +2,9 @@ from models import llava, gemini_api, fastrcnn
 from utils import bounding_box, image_utils, clustering
 from config import config
 from utils import utils
+import os
 
-def process_image(image_path):
+def process_image(image_path, filename):
     """
     Main pipeline function.
     """
@@ -19,7 +20,8 @@ def process_image(image_path):
     
     # 3.1 Draw bounding boxes
     image = image_utils.draw_boxes(image_path, clustered_boxes)
-    image_utils.save_image(image, config.OUTPUT_IMAGE_PATH)
+    filename_bb = filename.replace(".jpeg", "_bb.jpeg")
+    image_utils.save_image(image, config.OUTPUT_IMAGE_PATH + filename_bb)
 
     # 4. Crop images
     cropped_images = []
@@ -35,11 +37,16 @@ def process_image(image_path):
     # 7. Get person information from Gemini API
     person_info = gemini_api.get_person_info(merged_description) 
 
-    utils.save_results_as_json(config.LLAVA_PROMPT, config.GEMINI_PROMPT, merged_description, person_info, config.OUTPUT_RESULTS_PATH)
+    filename_result = filename.replace(".jpeg", "_results.json")
+    utils.save_results_as_json(config.LLAVA_PROMPT, config.GEMINI_PROMPT, merged_description, person_info, config.OUTPUT_RESULTS_PATH + filename_result)
 
     return person_info
     
 if __name__ == "__main__":
-    image_path = config.IMAGE_PATH
-    result = process_image(image_path)
-    #print(result) 
+    #image_path = config.IMAGE_PATH
+    image_folder_path = config.IMAGE_FOLDER_PATH
+    #result = process_image(image_path)
+    for filename in os.listdir(image_folder_path):
+        if filename.endswith(".jpeg"):
+            image_path = os.path.join(image_folder_path, filename)
+            process_image(image_path, filename)

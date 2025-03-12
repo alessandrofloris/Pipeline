@@ -47,10 +47,7 @@ config.py  # Or a more specific name if you have a dedicated secrets file
 *.json  # If it contains API keys
 .env
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# Other files you might want to ignore
+# Other files 
 .mypy_cache/
 .pytest_cache/
 htmlcov/
